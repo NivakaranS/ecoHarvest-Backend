@@ -6,10 +6,12 @@ const ordersSchema = new mongoose.Schema({
     orderNumber: {
         type: Number,
         required: true,
+        unique:true
     }, 
     orderDate: {
         type: Date, 
-        required: true
+        required: true,
+        default: Date.now
     },
     customerId: {
         type: mongoose.Schema.Types.ObjectId,
