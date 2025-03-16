@@ -2,11 +2,6 @@
 const mongoose = require('mongoose')
 
 const customerSchema = new mongoose.Schema({
-    customerId: {
-        type: Number,
-        required: true,
-        unique: true
-    },
     firstName: {
         type: String,
         required: true,
@@ -35,13 +30,13 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'users'
+    lastLogin: {
+        type: Date,
+        required: true
     }
+
 
 })
 
 
-module.exports = mongoose.model('Customers', customerSchema)
+module.exports = mongoose.model('Customer', customerSchema)
