@@ -37,11 +37,12 @@ const ordersSchema = new mongoose.Schema({
         type: String,
         required: true
     }, 
-    orderTime: {
-        type: Date,
+    orderDate: {
+        type: Date, 
         required: true,
         default: Date.now
-    }
+    },
+    
 });
 
 // Connects ordersSchema to the 'Orders' collection in the database
