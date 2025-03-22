@@ -32,19 +32,10 @@ const ordersSchema = new mongoose.Schema({
         type: String,
         required: true
     }, 
-<<<<<<< HEAD
-    orderDate: {
-        type: Date, 
-        required: true,
-        default: Date.now
-    },
-    
-=======
     orderTime: {
         type: Date,
         required: true
     }
->>>>>>> main
 });
 
 // Connects ordersSchema to the 'Orders' collection in the database

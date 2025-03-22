@@ -10,11 +10,6 @@ async function httpGetAllOrders(req, res) {
     }
 }
 
-<<<<<<< HEAD
-module.exports = {
-    getAllOrders
-}
-=======
 async function httpCreateOrder(req, res) {
     try{
         return res.status(200).json(await createOrder(req.body));
@@ -47,4 +42,3 @@ module.exports = {
     httpDeleteOrder,
     httpGetAllOrders
 };
->>>>>>> main
