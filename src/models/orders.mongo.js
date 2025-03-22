@@ -4,8 +4,7 @@ const ordersSchema = new mongoose.Schema({
     orderNumber: {
         type: String,
         required: true,
-        unique: true,
-        default: 'ORD1000'
+        unique: true
 
     }, 
     products: [
