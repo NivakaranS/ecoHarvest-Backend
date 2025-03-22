@@ -1,3 +1,5 @@
+const express = require("express");
+
 
 
 
@@ -13,5 +15,7 @@ OrdersRouter.post('/create', httpCreateOrder);
 OrdersRouter.post('/update', httpUpdateOrder);
 OrdersRouter.delete('/:id', httpDeleteOrder);
 
+
+ordersRouter.get("/orders", getAllOrders);
 
 module.exports = OrdersRouter;
