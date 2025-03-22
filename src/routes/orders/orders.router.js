@@ -1,10 +1,21 @@
+const express = require("express");
+
+
+
+
+const { httpGetAllOrders, httpCreateOrder, httpDeleteOrder, httpUpdateOrder } = require('./orders.controller')
+
 
 const express = require('express')
 
-const ordersRouter = express.Router()
-const {getAllOrders} = require('../orders.controller')
+const OrdersRouter = express.Router()
 
-ordersRouter.get('/orders', getAllOrders)
+OrdersRouter.get('/', httpGetAllOrders);
+OrdersRouter.post('/create', httpCreateOrder);
+OrdersRouter.post('/update', httpUpdateOrder);
+OrdersRouter.delete('/:id', httpDeleteOrder);
 
 
-module.exports = ordersRouter;
+ordersRouter.get("/orders", getAllOrders);
+
+module.exports = OrdersRouter;
