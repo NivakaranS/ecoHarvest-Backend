@@ -9,3 +9,4 @@ There should be a controller file for a router file
 A router uses a controller (one to one relationship)
 So we are keeping the controllers and routers in the same file
 Models are kept in a seprate folder cuz some controllers can be use multiple models
+(Modals and controllers do not have a one to one relationship)
