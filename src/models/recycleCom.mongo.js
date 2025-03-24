@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const recycleSchema = new mongoose.Schema({
-  rCompanyId: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
   firstName: {
     type: String,
     required: true,
@@ -31,3 +26,5 @@ const recycleSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+module.exports = mongoose.model("RecycleCompany", recycleSchema);
