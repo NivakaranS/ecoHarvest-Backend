@@ -7,7 +7,28 @@ const createDiscount = async (data) => {
     status: data.status,
   });
 };
-
+const deleteDiscount = async (id) => {
+  return await discount.deleteOne({
+    _id: id,
+  });
+};
+const updateDiscount = async (data) => {
+  return await discount.find(
+    {
+      _id: data.id,
+    },
+    data,
+    {
+      upsert: true,
+    }
+  );
+};
+const getAllDiscount = async () => {
+  return await discount.find({});
+};
 module.exports = {
   createDiscount,
+  deleteDiscount,
+  updateDiscount,
+  getAllDiscount,
 };
