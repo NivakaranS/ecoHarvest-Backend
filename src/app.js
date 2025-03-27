@@ -1,9 +1,7 @@
 // This file contains the main  express codes and middlewares
 
 // Importing express
-const {
-  RecycleCompany,
-} = require("./routes/recycleCompany/recycleCompany.router");
+const RecycleCompany = require("./routes/recycleCompany/recycleCompany.router");
 const express = require("express");
 
 const CustomerRouter = require("./routes/customers/customers.router");
