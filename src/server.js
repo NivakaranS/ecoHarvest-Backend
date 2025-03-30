@@ -21,11 +21,11 @@ mongoose.connection.once('open', () => {
 
 //Checking for mongoDB errors
 mongoose.connection.on('error', (err) => {
-    console.log('Error connecting with MongoDB: ',err)  
+   console.log('Error connecting with MongoDB: ',err)  
 })
 
 async function startServer() {
-    await mongoose.connect(MONGO_URL)    
+   await mongoose.connect(MONGO_URL)    
 
     server.listen(PORT, () => {
         console.log(`Listening on port ${PORT}...`)
