@@ -34,10 +34,7 @@ const productSchema = new mongoose.Schema({
         enum: ['Dairy', 'Meat', 'Vegetable', 'Bakery', 'Other'], 
         required: true 
     },
-    expirationDate: { 
-        type: Date, 
-        required: true 
-    },
+
     image: { 
         type: String 
     },
