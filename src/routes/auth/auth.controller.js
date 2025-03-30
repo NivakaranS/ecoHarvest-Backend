@@ -40,11 +40,11 @@ const login = async (req, res) => {
         const token = jwt.sign({
             id: user._id,
             role: user.role
-        }, process.env.JWT_SECRET, {expiresIn: '1h'})
+        }, process.env.JWT_SECRET || 'myDearSecret', {expiresIn: '1h'})
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV === 'production' || '',
             sameSite: 'Strict',
             maxAge: 3600000 
         })
