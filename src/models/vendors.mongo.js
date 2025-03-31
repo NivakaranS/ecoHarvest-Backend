@@ -7,11 +7,13 @@ const vendorSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    category: { type: String, enum: ['Restaurant', 'Bakery', 'Supplier', 'Waste Management'], required: true },
+    businessCategory: { type: String, 
+        enum: ['Recycle', 'Resell', 'Fertilizer'],
+         required: true },
     status: { type: String, default: 'Active' },
     loyaltyPoints: { type: Number, default: 0 },
-    totalRevenue: { type: Number, default: 0 },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("Vendor", vendorSchema);

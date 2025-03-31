@@ -1,17 +1,34 @@
 const Product = require('../../models/products.model');
+const Inventory = require('../../models/inventory.model')
 
-// Create a product
+
 const createProduct = async (req, res) => {
     try {
-        const product = new Product(req.body);
-        await product.save();
-        res.status(201).json(product);
+        const { name, subtitle, quantity, unitPrice, foodCategory, productCategory, imageLink, inventoryId } = req.body;
+
+        const inventory = await Inventory.findById(inventoryId);
+        if (!inventory) {
+            return res.status(400).json({ message: 'Invalid Inventory ID' });
+        }
+
+        const newProduct = new Product({
+            name,
+            subtitle,
+            quantity,
+            unitPrice,
+            foodCategory,
+            productCategory,
+            imageLink,
+            inventoryId,
+        });
+
+        await newProduct.save();
+        res.status(201).json(newProduct);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 };
 
-// Get all products
 const getProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -21,7 +38,6 @@ const getProducts = async (req, res) => {
     }
 };
 
-// Get a single product by ID
 const getProductById = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -32,7 +48,6 @@ const getProductById = async (req, res) => {
     }
 };
 
-// Update a product
 const updateProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -43,7 +58,6 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Delete a product
 const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
@@ -54,4 +68,31 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct } ;
+const searchProducts = async (req, res) => {
+    try {
+        const { search } = req.query;
+
+        if (!search) {
+            return res.status(400).json({ message: 'Search query is required' });
+        }
+
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: search, $options: 'i' } },
+                { subtitle: { $regex: search, $options: 'i' } },
+                { productCategory: { $regex: search, $options: 'i' } }
+            ]
+        }).populate('inventoryId')
+
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'No products found' });
+        }
+
+        res.status(200).json({ products });
+    } catch (error) {
+        console.error('Error searching products:', error);
+        res.status(500).json({ message: 'Error searching products', error });
+    }
+};
+
+module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct, searchProducts } ;
