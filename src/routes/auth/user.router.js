@@ -5,20 +5,20 @@ const authorizeRoles = require('../authMiddleware/roleMiddleware');
 const UserRouter = express.Router();
 
 // Only admin can access this route
-UserRouter.get('/admin', verifyToken, authorizeRoles("admin"), (req, res) => {
+UserRouter.get('/admin', verifyToken, authorizeRoles("Admin"), (req, res) => {
     res.json({message: 'Welcome Admin'});
 })
 
 
 
 // Both admin and vendor can access this route
-UserRouter.get('/vendor', verifyToken, authorizeRoles("manager"), (req, res) => {
+UserRouter.get('/vendor', verifyToken, authorizeRoles("Vendor"), (req, res) => {
     res.json({message: 'Welcome Vendor'});
 })
 
 
 // All users can access this route
-UserRouter.get('/user', verifyToken, authorizeRoles("user", "manager", "admin"), (req, res) => {
+UserRouter.get('/user', verifyToken, authorizeRoles("Customer", "manager", "Admin"), (req, res) => {
     res.json({message: 'Welcome User'});
 })
 

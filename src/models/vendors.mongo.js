@@ -7,10 +7,8 @@ const vendorSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    category: { type: String, enum: ['Restaurant', 'Bakery', 'Supplier', 'Waste Management'], required: true },
+    category: { type: String, enum: ['Restuarant', 'Bakery', 'Supplier', 'Waste Management'], required: true },
     status: { type: String, default: 'Active' },
-    loyaltyPoints: { type: Number, default: 0 },
-    totalRevenue: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now }
 });
 
