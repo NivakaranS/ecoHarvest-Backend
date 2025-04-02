@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
-const recycleSchema = new mongoose.Schema({
-  rCompanyId: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
+const companySchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -29,5 +24,8 @@ const recycleSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
+    enum: ["Dairy", "Meat", "Vegetable", "Bakery", "Other"],
   },
 });
+
+module.exports = mongoose.model("Company", companySchema);
