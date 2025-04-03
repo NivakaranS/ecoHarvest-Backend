@@ -14,6 +14,6 @@ CompanyRouter.get("/", httpGetAllCompanies);
 CompanyRouter.post("/create", httpCreateCompany);
 CompanyRouter.post("/update", httpUpdateCompany);
 CompanyRouter.delete("/:id", httpDeleteCompany);
-CompanyRouter.get("/:firstName", httpFindCompany);
+CompanyRouter.get("/:companyName", httpFindCompany);
 
 module.exports = CompanyRouter;
