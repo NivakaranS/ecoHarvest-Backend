@@ -14,14 +14,14 @@ const companySchema = new mongoose.Schema({
     required: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
   },
   email: {
     type: String,
     required: true,
   },
-  category: {
+  pCategory: {
     type: String,
     required: true,
     enum: ["Dairy", "Meat", "Vegetable", "Bakery", "Other"],

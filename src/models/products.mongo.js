@@ -1,56 +1,60 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
+  vendorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Vendor",
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  subtitle: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  unitPrice: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    enum: ["Resell", "Recycling", "Fertilizer"],
+    required: true,
+  },
+  pCategory: {
+    type: String,
+    required: true,
+    enum: ["Dairy", "Meat", "Vegetable", "Bakery", "Other"],
+  },
 
-    vendorId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Vendor', 
-        required: true 
-    },
-    name: { 
-        type: String, 
-        required: true 
-    },
-    subtitle: {
-        type: String, 
-        required: true 
-    },  
-    quantity: { 
-        type: Number, 
-        required: true 
-    },
-    unitPrice: { 
-        type: Number, 
-        required: true 
-    },
-    category: { 
-        type: String, 
-        enum: ['Resell', 'Recycling', 'Fertilizer'], 
-        required: true 
-    },
+  productCategory_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ProductCategory",
+    required: true,
+  },
 
-    productCategory_id: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'ProductCategory', 
-        required: true 
-    },
-
-    imageUrl: { 
-        type: String,
-        required: true 
-    },
-    status: { 
-        type: String,
-         default: 'In Stock' 
-     },
-     MRP: {
-        type: Number, 
-        required: true
-     },
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
-    }
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "In Stock",
+  },
+  MRP: {
+    type: Number,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);

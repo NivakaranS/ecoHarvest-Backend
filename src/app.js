@@ -6,6 +6,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
 const CustomerRouter = require("./routes/customers/customers.router");
+const DiscountRouter = require("./routes/discount/discount.router");
 const OrderRouter = require("./routes/orders/orders.router");
 const Cart = require("./routes/cart/cart.router");
 const productCategoriesRouter = require("./routes/productCategories/productCategories.router");
@@ -36,6 +37,7 @@ app.use("/orders", OrderRouter);
 app.use("/cart", Cart);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/discount", DiscountRouter);
 
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);

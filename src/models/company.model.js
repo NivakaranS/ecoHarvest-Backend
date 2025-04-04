@@ -7,7 +7,7 @@ async function createCompany(data) {
     companyName: data.companyName,
     phoneNumber: data.phoneNumber,
     email: data.email,
-    category: data.category,
+    pCategory: data.pCategory,
     lastLogin: Date.now(),
   });
 }
@@ -18,16 +18,18 @@ async function findCompany(query) {
   });
 }
 
+async function findCompanyByCategory(query) {
+  return await company.find({
+    pCategory: query,
+  });
+}
+
 async function updateCompany(data) {
-  return await company.find(
-    {
-      _id: data.id,
-    },
-    data,
-    {
-      upsert: true,
-    }
-  );
+  const updatedCompany = await company.findByIdAndUpdate(data.id, data, {
+    new: true,
+    upsert: true,
+  });
+  return updatedCompany;
 }
 
 async function deleteCompany(id) {
@@ -37,6 +39,7 @@ async function deleteCompany(id) {
 }
 
 async function getAllCompany() {
+  console.log("getAllCompany");
   return await company.find({});
 }
 
@@ -46,6 +49,5 @@ module.exports = {
   updateCompany,
   deleteCompany,
   getAllCompany,
+  findCompanyByCategory,
 };
-
-module.exports = company;
