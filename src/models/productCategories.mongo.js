@@ -11,6 +11,11 @@ const productCategorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    tag : {
+        type: String,
+        required: true,
+        enum: ['Resell', 'Recycle'],
+    }, 
     createdAt: {
         type: Date,
         required: true,

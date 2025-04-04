@@ -1,33 +1,59 @@
 const Product = require('../../models/products.model');
 const Inventory = require('../../models/inventory.model')
+const {getProductByCategoryId, getProductById, createProduct} = require('../../models/products.model')
 
-
-const createProduct = async (req, res) => {
+const httpGetProductByCategoryId = async (req, res) => {
+    
     try {
-        const { name, subtitle, quantity, unitPrice, foodCategory, productCategory, imageLink, inventoryId } = req.body;
-
-        const inventory = await Inventory.findById(inventoryId);
-        if (!inventory) {
-            return res.status(400).json({ message: 'Invalid Inventory ID' });
+        const { categoryId } = req.params;
+        if (!categoryId) {
+            return res.status(400).json({ message: 'Category ID is required' });
         }
-
-        const newProduct = new Product({
-            name,
-            subtitle,
-            quantity,
-            unitPrice,
-            foodCategory,
-            productCategory,
-            imageLink,
-            inventoryId,
-        });
-
-        await newProduct.save();
-        res.status(201).json(newProduct);
+        
+        const products = await getProductByCategoryId(categoryId);
+        if (!products) return res.status(404).json({ message: 'No products found for this category' });
+        res.status(200).json(products);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error("Error in getting product by category ID", err)
+        res.status(500).json({ message: err.message });
     }
-};
+}
+
+const httpGetProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: 'Product ID is required' });
+        }
+        const productDetails = await getProductById(id);
+
+        return res.status(200).json(productDetails);
+    } catch(err) {
+        console.error("Error in getting product by ID", err)
+        return res.status(500).json({ message: err.message });
+    }
+}
+
+
+const httpCreateProduct = async (req, res) => {
+    try {
+      const { name, subtitle, quantity, unitPrice, category, productCategory_id, imageUrl, status, MRP, vendorId } = req.body;
+      if (!name || !subtitle || !quantity || !unitPrice || !category || !productCategory_id || !imageUrl || !MRP || !vendorId) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+  
+      if (typeof quantity !== "number" || typeof unitPrice !== "number" || typeof MRP !== "number") {
+        return res.status(400).json({ message: "Quantity, Unit Price, and MRP must be numbers" });
+      }
+  
+      const product = await createProduct(req.body);
+      res.status(201).json(product);
+    } catch (err) {
+      console.error("Error in creating product", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
+
 
 const getProducts = async (req, res) => {
     try {
@@ -38,20 +64,11 @@ const getProducts = async (req, res) => {
     }
 };
 
-const getProductById = async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).json({ message: 'Product not found' });
-        res.status(200).json(product);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
 
 const updateProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!product) return res.status(404).json({ message: 'Product not found' });
+        if (!product) return res.status(404).json({ message: 'Product not found' });`
         res.status(200).json(product);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -68,31 +85,4 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-const searchProducts = async (req, res) => {
-    try {
-        const { search } = req.query;
-
-        if (!search) {
-            return res.status(400).json({ message: 'Search query is required' });
-        }
-
-        const products = await Product.find({
-            $or: [
-                { name: { $regex: search, $options: 'i' } },
-                { subtitle: { $regex: search, $options: 'i' } },
-                { productCategory: { $regex: search, $options: 'i' } }
-            ]
-        }).populate('inventoryId')
-
-        if (products.length === 0) {
-            return res.status(404).json({ message: 'No products found' });
-        }
-
-        res.status(200).json({ products });
-    } catch (error) {
-        console.error('Error searching products:', error);
-        res.status(500).json({ message: 'Error searching products', error });
-    }
-};
-
-module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct, searchProducts } ;
+module.exports = { httpCreateProduct, httpGetProductByCategoryId, getProducts, httpGetProductById, updateProduct, deleteProduct } ;
