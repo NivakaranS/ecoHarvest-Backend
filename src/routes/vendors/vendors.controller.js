@@ -1,5 +1,5 @@
 const Vendor = require('../../models/vendors.model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 //Login 
 const loginVendor = async (req, res) => {

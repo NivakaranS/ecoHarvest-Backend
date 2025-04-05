@@ -2,7 +2,42 @@
 const  User = require('../../models/users.mongo');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {  registerIndividualCustomer, registerAdmin, registerCompanyCustomer} = require('../../models/users.model')
 
+
+const httpRegisterIndividualCustomer = async (req, res) => {
+    try {
+        await registerIndividualCustomer(req.body);
+
+        res.status(201).json({message: 'User created successfully'})
+
+    } catch (err) {
+        console.log("Error in creating individual customer", err);
+        return res.status(500).json({message: err})
+    }
+}
+
+const httpRegisterCompanyCustomer = async (req, res) => {
+    try {
+        await registerCompanyCustomer(req.body)
+
+        res.status(201).json({message: 'Company created successfully'})
+    } catch (err) {
+        console.log("Error in creating company customer", err);
+        return res.status(500).json({message: err})
+    }
+}
+
+const httpRegisterAdmin = async (req, res) => {
+    try {
+        await registerAdmin(req.body)
+
+        res.status(201).json({message: 'Admin created successfully'})
+    } catch (err) {
+        console.log("Error in creating admin", err);
+        return res.status(500).json({message: err})
+    }
+}
 
 const register = async (req, res) => {
     
@@ -60,5 +95,8 @@ const login = async (req, res) => {
 
 module.exports = {
     register,
-    login
+    login, 
+    httpRegisterIndividualCustomer,
+    httpRegisterCompanyCustomer,
+    httpRegisterAdmin
 }

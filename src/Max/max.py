@@ -14,6 +14,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from chromadb.config import Settings
 from langchain_chroma import Chroma
+from langchain.tools import Tool
+from langchain.agents import initialize_agent, AgentType
 import os
 from dotenv import load_dotenv
 
@@ -26,8 +28,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:3000/"
-    
+   
 ]
 
 app.add_middleware(
@@ -37,6 +38,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+
 
 
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
@@ -69,6 +72,37 @@ def process_pdf(file_path):
     return vectorstore
 
 
+tools = [get_customer_feedback_tool, calculate_math_tool]
+
+agent = initialize_agent(
+    tools=tools,
+    llm=llm,  # Your LLM (Groq)
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,  # Enable function calling
+    verbose=True
+)
+
+
+get_customer_feedback_tool = Tool(
+    name="get_customer_feedback",
+    func=get_customer_feedback,
+    description="Get feedback from the customer and record it in the database",
+)
+
+calculate_math_tool = Tool(
+    name="calculate_math",
+    func=calculate_math,
+    description="Perform mathematical calculations",
+)
+
+def get_customer_feedback(customerName, email, feedback):
+    
+    return f"Feedback from {customerName} ({email}): {feedback}"
+
+def calculate_math(expression: str):
+    try:
+        return eval(expression)
+    except:
+        return "invalid mathematical expression"
 
 # Initialize Chroma with pre-loaded PDF
 vectorstore = process_pdf('max2.pdf')
@@ -105,12 +139,17 @@ async def ask_question(request: QuestionRequest):
     history_aware_retriever = create_history_aware_retriever(llm, retriever2, contextualize_q_prompt)
 
     system_prompt = (
-        "You are Max, a AI assistant for providing information about Ecoharvest,"
-        "Address him as sir. You are like Jarvis for Tony Stark in iron man"
-        "Keep your messages short and precise. Be professional. "
-        "You are created to assist him. Say the question is out of scope "
-        "ONLY if you are asked questions out of the context of the chat history"
-        "Use the following pieces of retrieved context : \n\n{context}" 
+        """You are an AI assistant of an e-commerce platform.Your name is Max. Use functions to get real-time data:
+
+        - ALWAYS call get_customer_feedback for recording customer feedback
+        - ALWAYS call calculate_math for mathematical calculations
+        - NEVER guess the answers, always use the functions provided or the context provided
+        - Explain anomalies if API returns errors
+        - Always use the context provided to answer the question
+        - If the question is not related to the context, say "It is out of my scope to answer this question"
+        - Address the person as "sir/madam"
+
+        Use the following pieces of retrieved context : \n\n{context}"""
     )
 
 
@@ -137,6 +176,10 @@ async def ask_question(request: QuestionRequest):
 
     last_6_messages = session_history.messages[-6:]
 
+    response = agent.invoke(
+        {"input": question, "chat_history": last_6_messages}
+    )
+
     try:
         response = rag_chain.invoke(
             {"input": question, "chat_history": last_6_messages},
@@ -144,6 +187,7 @@ async def ask_question(request: QuestionRequest):
                 "configurable": {"session_id": session_id}
             }
         )
+
     except Exception as e:
         print(f"Error: {e}")
         return {"error": str(e)}, 500

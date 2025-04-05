@@ -1,6 +1,23 @@
 const Product = require('../../models/products.model');
-const {getProductByCategoryId, getProductById, createProduct} = require('../../models/products.model')
+const {getProductByCategoryId, searchProducts, getProductById, createProduct} = require('../../models/products.model')
 
+
+const httpSearchProduct = async (req, res) => {
+    try {
+        const data = req.body;
+        
+        if (!data.searchTerm) {
+            return res.status(400).json({ message: 'Search term and Category is required' });
+        }
+        
+        const products = await searchProducts(data);
+        if (!products) return res.status(404).json({ message: 'No products found' });
+        res.status(200).json(products);
+    } catch (err) {
+        console.error("Error in searching product", err)
+        res.status(500).json({ message: err.message });
+    }
+}
 
 
 const httpGetProductByCategoryId = async (req, res) => {
@@ -80,4 +97,4 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = { httpCreateProduct, httpGetProductByCategoryId, getProducts, httpGetProductById, updateProduct, deleteProduct } ;
+module.exports = { httpCreateProduct, httpSearchProduct, httpGetProductByCategoryId, getProducts, httpGetProductById, updateProduct, deleteProduct } ;

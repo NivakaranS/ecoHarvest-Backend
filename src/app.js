@@ -16,6 +16,7 @@ const inventoryRouter = require('./routes/inventory/inventory.router')
 const fertilizerCompanyRouter = require('./routes/fertilizerCompany/fertilizerCompany.router')
 const vendorRoutes = require('./routes/vendors/vendors.router')
 const productRouter = require('./routes/products/products.router')
+const reportRouter = require('./routes/pdf/pdf.router')
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/api/users', userRoutes);
 
 app.use('/vendors', vendorRoutes);
 app.use('/products', productRouter);
+app.use('/report', reportRouter);
 
 
 
