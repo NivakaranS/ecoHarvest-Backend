@@ -55,16 +55,24 @@ const httpGetProductById = async (req, res) => {
 
 const httpCreateProduct = async (req, res) => {
     try {
-        const product = await createProduct(req.body);
-        res.status(201).json(product);
-    } catch(err) {
-        console.error("Error in creating product", err)
-        return res.status(500).json({ error: "Internal Server Error" })
+      const { name, subtitle, quantity, unitPrice, category, productCategory_id, imageUrl, status, MRP, vendorId } = req.body;
+      if (!name || !subtitle || !quantity || !unitPrice || !category || !productCategory_id || !imageUrl || !MRP || !vendorId) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+  
+      if (typeof quantity !== "number" || typeof unitPrice !== "number" || typeof MRP !== "number") {
+        return res.status(400).json({ message: "Quantity, Unit Price, and MRP must be numbers" });
+      }
+  
+      const product = await createProduct(req.body);
+      res.status(201).json(product);
+    } catch (err) {
+      console.error("Error in creating product", err);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-}
+  };
 
 
-// Get all products
 const getProducts = async (req, res) => {
     try {
         const products = await Product.find();
@@ -75,7 +83,6 @@ const getProducts = async (req, res) => {
 };
 
 
-// Update a product
 const updateProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -86,7 +93,6 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Delete a product
 const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
