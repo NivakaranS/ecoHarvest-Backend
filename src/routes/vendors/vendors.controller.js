@@ -1,4 +1,4 @@
-const Vendor = require('../../models/vendors.model');
+const Vendor = require('../../models/vendors.mongo');
 const bcrypt = require('bcryptjs');
 
 // //Login 
