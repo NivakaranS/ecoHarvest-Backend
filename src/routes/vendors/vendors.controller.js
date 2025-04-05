@@ -30,38 +30,21 @@ const bcrypt = require('bcryptjs');
 // };
 
 
-const registerVendor = async (req, res) => {
-    try {
-        const { firstName, lastName, businessName, phoneNumber, email, password, businessCategory } = req.body;
+// const registerVendor = async (req, res) => {
+//     try {
+//         const { firstName, lastName, businessName, phoneNumber, email, password, businessCategory } = req.body;
 
-        if (!firstName || !lastName || !businessName || !phoneNumber || !email || !password || !businessCategory ) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
+//         if (!firstName || !lastName || !businessName || !phoneNumber || !email || !password || !businessCategory ) {
+//             return res.status(400).json({ message: 'All fields are required' });
+//         }
 
-        const existingVendor = await Vendor.findOne({ email });
-        if (existingVendor) {
-            return res.status(400).json({ message: 'Vendor with this email already exists' });
-        }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newVendor = new Vendor ({
-            firstName,
-            lastName,
-            businessName,
-            phoneNumber,
-            email,
-            password: hashedPassword,
-            businessCategory
-        });
-
-        await newVendor.save();
-
-        res.status(201).json({ message: 'Vendor registered successfully!', vendor: newVendor });
-    } catch (error) {
-        console.error('Error registering vendor:', error);
-        res.status(500).json({ message: 'Error registering vendor', error });
-    }
-};
+//         res.status(201).json({ message: 'Vendor registered successfully!', vendor: newVendor });
+//     } catch (error) {
+//         console.error('Error registering vendor:', error);
+//         res.status(500).json({ message: 'Error registering vendor', error });
+//     }
+// };
 
 
 const getVendorById = async (req, res) => {
@@ -145,4 +128,4 @@ const loginVendor = async (req, res) => {
 };
 
 
-module.exports = { registerVendor, getVendorById, updateVendor, deleteVendor, loginVendor };
+module.exports = {  getVendorById, updateVendor, deleteVendor };

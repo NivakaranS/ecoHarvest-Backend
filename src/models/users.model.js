@@ -1,6 +1,7 @@
 const User = require("./users.mongo");
 const { createIndividualCustomer, createCompanyCustomer} = require("./customers.model");
 const { createAdmin } = require("./admin.model");
+const { createVendor} = require("./vendors.model");
 const bcrypt = require("bcryptjs");
 
 
@@ -103,6 +104,36 @@ const registerUser = async (data) => {
   return "User created successfully";
 };
 
+
+const registerVendor = async (data) => {
+  try {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const vendorId = await createVendor({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      businessName: data.businessName,
+      phoneNumber: data.phoneNumber,
+      email: data.email,
+      password: data.password,
+
+    })
+
+    const newUser = new User({
+      username: data.username,
+      password: hashedPassword,
+      entityId: vendorId,
+      role: "Vendor",
+    });
+
+    await newUser.save();
+    return "Vendor created successfully";
+  } catch (err) {
+    console.log("Error in creating vendor", err);
+    return "Error in creating vendor ";
+  }
+};
+
 const registerAdmin = async (data) => {
   try {
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -137,4 +168,5 @@ module.exports = {
   registerIndividualCustomer,
   registerCompanyCustomer,
   registerAdmin,
+  registerVendor
 };
