@@ -15,7 +15,5 @@ Userrouter.post('/registerAdmin', httpRegisterAdmin)
 Userrouter.post('/registerVendor', httpRegisterVendor)
 
 
-
-
 module.exports = Userrouter;
 
