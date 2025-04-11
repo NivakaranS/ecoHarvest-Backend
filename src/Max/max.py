@@ -79,7 +79,7 @@ calculate_math_tool = Tool(
 )
 
 tools = [get_customer_feedback_tool, calculate_math_tool]
-vectorstore = process_pdf('max2.pdf')
+vectorstore = process_pdf('max3.pdf')
 retriever = vectorstore.as_retriever()
 
 def execute_function_call(raw_response: str):
@@ -154,21 +154,15 @@ async def ask_question(request: QuestionRequest):
         - Parameters: "customerName": "string", "email": "string", "feedback": "string"
         - Example: <function>get_customer_feedback: "customerName": [customer name],"email":[email], "feedback": [customer feedback]</function>
 
-        **Response Format Rules:**
-        1. ALWAYS use this structure:
-        <think>[Your reasoning]</think>
-        [Answer text]
-        [Optional function calls embedded in answer where needed]
-        YOUR FINAL ANSWER MUST ALWAYS START AFTER THE </think> TAG
 
-        2. Function calls MUST:
+        3. Function calls MUST:
         - Be wrapped in <function> tags
         - Use EXACT parameter names
         - Appear where their results should be used
 
-        3. Never invent functions - only use the 2 listed above
+        4. Never invent functions - only use the 2 listed above
 
-        4. For ecoHarvest-related questions, use the context below:
+        5. For ecoHarvest-related questions, use the context below:
         {context}"""
 
         
