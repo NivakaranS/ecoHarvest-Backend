@@ -1,5 +1,4 @@
-// This file contains the main  express codes
-// Importing express
+
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
