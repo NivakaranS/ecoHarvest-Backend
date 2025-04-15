@@ -20,6 +20,7 @@ const CustomerRouter = require("./routes/customers/customers.router");
 const CompanyRouter = require("./routes/company/company.router");
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
+const reportsRouter = require('./routes/reports/reports.router');
 
 const app = express();
 
@@ -59,7 +60,7 @@ app.use('/vendors', vendorRoutes);
 app.use('/products', productRouter);
 app.use('/report', reportRouter);
 app.use('/reviews', ReviewsRouter);
-
+app.use('/api/reports', reportsRouter);
 
 
 app.get('/check-cookie', (req, res) => {
