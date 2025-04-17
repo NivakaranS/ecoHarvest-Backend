@@ -1,4 +1,5 @@
 const Product = require("../../models/products.model");
+const Products = require("../../models/products.mongo");
 const {
   getProductByCategoryId,
   searchProducts,
@@ -108,7 +109,7 @@ const httpCreateProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Products.find();
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -117,7 +118,7 @@ const getProducts = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const product = await Products.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -129,7 +130,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const product = await Products.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {

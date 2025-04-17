@@ -34,7 +34,14 @@ const productSchema = new mongoose.Schema({
         ref: 'ProductCategory', 
         required: true 
     },
-
+    numberOfReviews: {
+        type: Number, 
+        default: 0 
+    },
+    averageRating: { 
+        type: Number, 
+        default: 0 
+    },
     imageUrl: { 
         type: String,
         required: true 

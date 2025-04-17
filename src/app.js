@@ -1,5 +1,4 @@
-// This file contains the main  express codes
-// Importing express
+
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -19,6 +18,10 @@ const reportRouter = require('./routes/pdf/pdf.router')
 const CustomerRouter = require("./routes/customers/customers.router");
 
 const CompanyRouter = require("./routes/company/company.router");
+const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
+const ReviewsRouter = require("./routes/reviews/reviews.router");
+const reportsRouter = require('./routes/reports/reports.router');
+
 const app = express();
 
 app.use(
@@ -46,6 +49,7 @@ app.use("/products", productRouter);
 app.use('/productcategories', productCategoriesRouter);
 app.use('/customers', CustomerRouter);
 app.use('/orders', OrderRouter);
+app.use('/advertisement', AdvertisementRouter);
 app.use('/cart', Cart);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -55,7 +59,8 @@ app.use('/api/users', userRoutes);
 app.use('/vendors', vendorRoutes);
 app.use('/products', productRouter);
 app.use('/report', reportRouter);
-
+app.use('/reviews', ReviewsRouter);
+app.use('/api/reports', reportsRouter);
 
 
 app.get('/check-cookie', (req, res) => {
