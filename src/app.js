@@ -20,9 +20,9 @@ const CompanyRouter = require("./routes/company/company.router");
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
 
-// const stripe = require("stripe")(
-//   "sk_test_51QEPgtHfjG6ABZDpDRmjLzQgDYxWHkNUffnDkpuXXW8xTYUJkm3WumukL01DmNuOrRDqchnW2NoDYw46tUx80FKO00u1Uq0idR"
-// );
+const stripe = require("stripe")(
+  ""
+);
 
 const app = express();
 
