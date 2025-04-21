@@ -1,12 +1,20 @@
 
 
-const { getAllOrders, deleteOrder, updateOrder, createOrder } = require('../../models/orders.model')
+const { getAllOrders, deleteOrder, updateOrder, createOrder, checkoutOrder } = require('../../models/orders.model')
 
 async function httpGetAllOrders(req, res) {
     try {
         return res.status(200).json(await getAllOrders());
     } catch(err) {
         console.error("Error in getting all orders", err);
+    }
+}
+
+async function httpCheckoutOrder(req, res) {
+    try {
+        return res.status(200).json(await checkoutOrder(req.body));
+    } catch(err) {
+        console.error("Error in checking out order", err);
     }
 }
 
@@ -40,5 +48,6 @@ module.exports = {
     httpCreateOrder,
     httpUpdateOrder,
     httpDeleteOrder,
-    httpGetAllOrders
+    httpGetAllOrders,
+    httpCheckoutOrder
 };

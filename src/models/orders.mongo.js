@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const ordersSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     orderNumber: {
         type: String,
         required: true,
@@ -34,7 +39,8 @@ const ordersSchema = new mongoose.Schema({
     }, 
     orderTime: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     }
 });
 

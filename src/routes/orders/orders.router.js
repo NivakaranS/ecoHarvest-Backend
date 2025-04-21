@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { httpGetAllOrders, httpCreateOrder, httpDeleteOrder, httpUpdateOrder } = require('./orders.controller')
+const { httpGetAllOrders, httpCheckoutOrder, httpCreateOrder, httpDeleteOrder, httpUpdateOrder } = require('./orders.controller')
 
 
 
@@ -10,7 +10,7 @@ OrdersRouter.get('/', httpGetAllOrders);
 OrdersRouter.post('/create', httpCreateOrder);
 OrdersRouter.post('/update', httpUpdateOrder);
 OrdersRouter.delete('/:id', httpDeleteOrder);
-
+OrdersRouter.post('/checkout', httpCheckoutOrder);
 
 
 module.exports = OrdersRouter;

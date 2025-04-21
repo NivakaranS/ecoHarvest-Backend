@@ -1,31 +1,46 @@
-const mongoose = require("mongoose");
 
-const companySchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  companyName: {
-    type: String,
-    required: true,
-  },
-  phoneNumber: {
-    type: Number,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-    enum: ["Dairy", "Meat", "Vegetable", "Bakery", "Other"],
-  },
-});
+const mongoose = require('mongoose')
 
-module.exports = mongoose.model("Company", companySchema);
+const CompanySchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    companyName: {
+        type: String,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    }, 
+    email: {
+        type: String,
+        required: true
+    },
+    dateOfBirth: {
+        type: String,
+        required: true
+    },
+    gender: {
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['Dairy', 'Meat', 'Vegetable', 'Bakery', 'Other']
+    },
+    address: {
+        type: String,
+        required: true
+    }
+})
+
+
+module.exports = mongoose.model('Company', CompanySchema)
+
