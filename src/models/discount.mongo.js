@@ -6,7 +6,7 @@ const discountSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    catagery: {
+    category: {
       type: String,
       required: true,
       enum: ["Resell", "Recycle"],
@@ -18,7 +18,7 @@ const discountSchema = new mongoose.Schema(
     productId: {
       type: mongoose.Schema.ObjectId,
       ref: "Product",
-      required,
+      required: true,
     },
   },
   { timestamps: true }

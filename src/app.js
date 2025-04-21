@@ -16,6 +16,7 @@ const fertilizerCompanyRouter = require("./routes/fertilizerCompany/fertilizerCo
 const vendorRoutes = require("./routes/vendors/vendors.router");
 const productRouter = require("./routes/products/products.router");
 const CompanyRouter = require("./routes/company/company.router");
+const DiscountRouter = require("./routes/discount/discount.router");
 const app = express();
 
 app.use(
@@ -36,7 +37,7 @@ app.use("/orders", OrderRouter);
 app.use("/cart", Cart);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
 
