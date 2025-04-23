@@ -2,37 +2,23 @@
 const mongoose = require('mongoose')
 
 const customerSchema = new mongoose.Schema({
-    firstName: {
+    
+    type: {
         type: String,
         required: true,
+        enum: ['Individual', 'Company']
     },
-    lastName: {
-        type: String,
-        required: true
+    customerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'type',
+        required: true,
+        
     },
-    phoneNumber: {
-        type: Number,
-        required: true
-    }, 
-    email: {
-        type: String,
-        required: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true
-    },
-    gender: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        required: true
-    },
+    
     lastLogin: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     }
 
 
@@ -40,3 +26,4 @@ const customerSchema = new mongoose.Schema({
 
 
 module.exports = mongoose.model('Customer', customerSchema)
+

@@ -12,12 +12,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    entityId: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'role',
+        required: true
+    },
     role: {
         type: String,
         required: true,
         enum: ['Customer', 'Admin', 'Vendor'],   
     },
-    timestamps: {
+    createdTimestamp: {
         default: Date.now(),
         type: Date
     }

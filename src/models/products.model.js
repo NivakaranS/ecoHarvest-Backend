@@ -3,6 +3,7 @@
 const products = require('./products.mongo');
 const mongoose = require('mongoose');
 const { ObjectId } = require('mongoose');
+const ProductCategory = require('./productCategories.mongo');
 
 const getAllProducts = async () => {
     try {
@@ -72,6 +73,46 @@ const getProductByCategoryId = async (categoryId) => {
 };
 
 
+const searchProducts = async (data) => {
+    try {
+
+        let categoryId;
+        
+        
+        if (!data?.searchTerm?.trim()) {
+            throw new Error('Search term is required');
+        }
+
+        
+        if (data.categoryN) {
+            const escapedCategoryName = data.categoryN;
+            const category = await ProductCategory.findOne({
+                name: escapedCategoryName
+            });
+
+            if (!category) {
+                throw new Error(`Category "${data.categoryN}" not found`);
+            }
+            categoryId = category._id;
+        }
+
+        return await products.find({
+            name: {
+                $regex: data.searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 
+                $options: 'i' 
+            },
+            ...(data.categoryN && {  
+                productCategory_id: categoryId
+            })
+        })
+        
+        
+    } catch (error) {
+        console.error('Search error:', error);
+        throw new Error(`Search failed: ${error.message}`);
+    }
+}
+
 const createProduct = async (data) => {
     
     const product = await products.create(data);
@@ -83,5 +124,6 @@ const createProduct = async (data) => {
 module.exports = {
     getProductByCategoryId,
     createProduct,
-    getProductById
+    getProductById, 
+    searchProducts
 };

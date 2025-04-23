@@ -4,46 +4,101 @@ const Product = require('./products.mongo');
 
 
 const updateQuantity = async (cartId, productId, updatedQuantity) => {
-    
-    if (updateQuantity < 1) {
-        return "Quantity must be at least 1";
-    }
-    
-    const updatedCart = await Cart.findByIdAndUpdate(
-        cartId,
-        {
-            $set: { "products.$[elem].quantity": updatedQuantity }
-        },
-        {
-            arrayFilters: [{ "elem.productId": productId }],
-            new: true 
+    try {
+ 
+        if (updatedQuantity < 1) {
+            throw new Error('Quantity must be at least 1');
         }
-    )
+
+      
+        const product = await Product.findById(productId).select('unitPrice');
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        const currentPrice = product.unitPrice;
+
+       
+        const cart = await Cart.findById(cartId);
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+
     
-    return updatedCart;
-    
-}
+        const existingProduct = cart.products.find(p => 
+            p.productId.toString() === productId.toString()
+        );
+
+        if (!existingProduct) {
+            throw new Error('Product not found in cart');
+        }
+
+      
+        existingProduct.quantity = updatedQuantity;
+        existingProduct.price = currentPrice; 
+
+        
+        cart.totalAmount = cart.products.reduce((total, item) => {
+            return total + (item.price * item.quantity);
+        }, 0);
+
+        await cart.save();
+        return cart;
+
+    } catch (error) {
+        console.error('Error updating quantity:', error);
+        throw error;
+    }
+};
 
 const addProductToCart = async (userId, quantity, productId) => {
     try {
+        
+        const product = await Product.findById(productId).select('unitPrice');
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        const price = product.unitPrice;
+
+        
         let cart = await Cart.findOne({ userId });
 
         if (!cart) {
-            const newCart = new Cart({ 
-                userId, 
-                products: [{productId, quantity} ] 
+            
+            const newCart = new Cart({
+                userId,
+                products: [{
+                    productId,
+                    quantity,
+                    price 
+                }],
+                totalAmount: price * quantity
             });
             await newCart.save();
             return newCart;
         } else {
-            const existingProduct = cart.products.find(p=> p.productId.toString() === productId);
             
+            const existingProduct = cart.products.find(p => 
+                p.productId.toString() === productId.toString()
+            );
+
             if (existingProduct) {
+                
                 existingProduct.quantity += quantity;
+                existingProduct.price = price; // Update to current price
             } else {
-                cart.products.push({ productId, quantity });
+                
+                cart.products.push({
+                    productId,
+                    quantity,
+                    price
+                });
             }
-            
+
+
+            cart.totalAmount = cart.products.reduce((total, item) => {
+                return total + (item.price * item.quantity);
+            }, 0);
+
             await cart.save();
             return cart;
         }
@@ -51,7 +106,7 @@ const addProductToCart = async (userId, quantity, productId) => {
         console.error('Error adding product to cart:', error);
         throw error;
     }
-}
+};
 
 const deleteCartProduct = async (cartId, productId) => {
     try {
