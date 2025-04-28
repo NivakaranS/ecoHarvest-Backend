@@ -12,7 +12,7 @@ async function createDiscount(data) {
   console.log(data.percentage);
   return await Discount.create({
     percentage: data.percentage,
-    category: data.category,
+    //category: data.category,
     status: data.status,
     //productCategory: data.productCategory,
     productId: data.productId,
@@ -47,7 +47,7 @@ async function updateDiscount(data) {
       data.id,
       {
         percentage: data.percentage,
-        category: data.category,
+
         status: data.status,
         productId: data.productId,
       },

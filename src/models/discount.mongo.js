@@ -6,11 +6,7 @@ const discountSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
-      enum: ["Resell", "Recycle"],
-    },
+
     status: {
       type: Boolean,
       required: true,

@@ -16,6 +16,7 @@ const vendorRoutes = require('./routes/vendors/vendors.router')
 const productRouter = require('./routes/products/products.router')
 const reportRouter = require('./routes/pdf/pdf.router')
 
+
 const CustomerRouter = require("./routes/customers/customers.router");
 
 const CompanyRouter = require("./routes/company/company.router");
@@ -24,7 +25,9 @@ const DiscountRouter = require("./routes/discount/discount.router");
 
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
+
 const reportsRouter = require('./routes/reports/reports.router');
+
 const vehicleRouter = require('./routes/vehicle/vehicle.router');
 
 const app = express();
@@ -51,6 +54,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
+
 
 app.use('/advertisement', AdvertisementRouter);
 
@@ -85,8 +89,17 @@ app.get('/check-cookie', (req, res) => {
     } catch (err) {
         console.error("Error in checking cookie:", err);
         res.status(500).json({ message: 'Internal Server Error' });
+
     }
 
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    res.json({ role: decoded.role, id: decoded.id });
+  } catch (err) {
+    console.error("Error in checking cookie:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 app.post("/logout", (req, res) => {

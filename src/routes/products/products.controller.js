@@ -5,6 +5,8 @@ const {
   searchProducts,
   getProductById,
   createProduct,
+  getRecycleProducts,
+  //getProductsByEnumCategory,
 } = require("../../models/products.model");
 
 const httpSearchProduct = async (req, res) => {
@@ -26,7 +28,15 @@ const httpSearchProduct = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+// const httpGetRecycleProducts = async (req, res) => {
+//   const category = "Recycle";
+//   const products = await getProductsByEnumCategory(category);
 
+//   res.status(200).json({
+//     success: true,
+//     data: products,
+//   });
+// };
 const httpGetProductByCategoryId = async (req, res) => {
   try {
     const { categoryId } = req.params;
@@ -49,6 +59,7 @@ const httpGetProductByCategoryId = async (req, res) => {
 const httpGetProductById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("Received product ID:", id);
     if (!id) {
       return res.status(400).json({ message: "Product ID is required" });
     }
@@ -137,6 +148,15 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+const httpGetAllRecycleProducts = async (req, res) => {
+  try {
+    return res.status(200).send(await getRecycleProducts());
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ message: "Error in getting all Products", error: err.message });
+  }
+};
 
 module.exports = {
   httpCreateProduct,
@@ -146,4 +166,6 @@ module.exports = {
   httpGetProductById,
   updateProduct,
   deleteProduct,
+  httpGetAllRecycleProducts,
+  //httpGetRecycleProducts,
 };
