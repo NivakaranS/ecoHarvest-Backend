@@ -1,11 +1,7 @@
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
 
-    productId: 
-    { type: String, 
-        required: true, 
-        unique: true 
-    },
     vendorId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Vendor', 
@@ -15,6 +11,10 @@ const productSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    subtitle: {
+        type: String, 
+        required: true 
+    },  
     quantity: { 
         type: Number, 
         required: true 
@@ -28,34 +28,37 @@ const productSchema = new mongoose.Schema({
         enum: ['Resell', 'Recycling', 'Fertilizer'], 
         required: true 
     },
-    productCategory: { 
-        type: String, 
-        enum: ['Dairy', 'Meat', 'Vegetable', 'Bakery', 'Other'], 
+
+    productCategory_id: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'ProductCategory', 
         required: true 
     },
-    expirationDate: { 
-        type: Date, 
-        required: true 
+    numberOfReviews: {
+        type: Number, 
+        default: 0 
     },
-    image: { 
-        type: String 
+    averageRating: { 
+        type: Number, 
+        default: 0 
+    },
+    imageUrl: { 
+        type: String,
+        required: true 
     },
     status: { 
         type: String,
-         default: 'Available' 
+         default: 'In Stock' 
      },
-    bulkUpload: { 
-        type: Boolean, 
-        default: false 
-    },
-    autoExpireAlert: { 
-        type: Boolean, 
-        default: true 
-    },
+     MRP: {
+        type: Number, 
+        required: true
+     },
     createdAt: { 
         type: Date, 
         default: Date.now 
     }
 });
+
 
 module.exports = mongoose.model('Product', productSchema);
