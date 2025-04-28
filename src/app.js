@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -24,7 +25,7 @@ const DiscountRouter = require("./routes/discount/discount.router");
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
 const reportsRouter = require('./routes/reports/reports.router');
-
+const vehicleRouter = require('./routes/vehicle/vehicle.router');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/inventory", inventoryRouter);
+app.use('/vehicle', vehicleRouter);
 app.use("/fertilizer-company", fertilizerCompanyRouter);
 app.use("/company", CompanyRouter);
 app.use("/productcategories", productCategoriesRouter);
@@ -49,6 +51,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
+
+app.use('/advertisement', AdvertisementRouter);
+
 
 app.use('/productcategories', productCategoriesRouter);
 app.use('/customers', CustomerRouter);
@@ -99,3 +104,4 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
