@@ -1,18 +1,21 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
 
-const OrderRouter = require("./routes/orders/orders.router");
-const Cart = require("./routes/cart/cart.router");
-const productCategoriesRouter = require("./routes/productCategories/productCategories.router");
-const authRoutes = require("./routes/auth/auth.router");
-const userRoutes = require("./routes/auth/user.router");
-const inventoryRouter = require("./routes/inventory/inventory.router");
-const fertilizerCompanyRouter = require("./routes/fertilizerCompany/fertilizerCompany.router");
-const vendorRoutes = require("./routes/vendors/vendors.router");
-const productRouter = require("./routes/products/products.router");
-const reportRouter = require("./routes/pdf/pdf.router");
+
+const express = require('express');
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const jwt = require('jsonwebtoken')
+
+const OrderRouter = require('./routes/orders/orders.router');
+const Cart = require('./routes/cart/cart.router');
+const productCategoriesRouter = require('./routes/productCategories/productCategories.router');
+const authRoutes = require('./routes/auth/auth.router')
+const userRoutes = require('./routes/auth/user.router')
+const inventoryRouter = require('./routes/inventory/inventory.router')
+const fertilizerCompanyRouter = require('./routes/fertilizerCompany/fertilizerCompany.router')
+const vendorRoutes = require('./routes/vendors/vendors.router')
+const productRouter = require('./routes/products/products.router')
+const reportRouter = require('./routes/pdf/pdf.router')
+
 
 const CustomerRouter = require("./routes/customers/customers.router");
 
@@ -22,7 +25,10 @@ const DiscountRouter = require("./routes/discount/discount.router");
 
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
-const reportsRouter = require("./routes/reports/reports.router");
+
+const reportsRouter = require('./routes/reports/reports.router');
+
+const vehicleRouter = require('./routes/vehicle/vehicle.router');
 
 const app = express();
 
@@ -36,6 +42,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/inventory", inventoryRouter);
+app.use('/vehicle', vehicleRouter);
 app.use("/fertilizer-company", fertilizerCompanyRouter);
 app.use("/company", CompanyRouter);
 app.use("/productcategories", productCategoriesRouter);
@@ -48,24 +55,41 @@ app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
 
-app.use("/productcategories", productCategoriesRouter);
-app.use("/customers", CustomerRouter);
-app.use("/orders", OrderRouter);
-app.use("/advertisement", AdvertisementRouter);
-app.use("/cart", Cart);
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
 
-app.use("/vendors", vendorRoutes);
-app.use("/products", productRouter);
-app.use("/report", reportRouter);
-app.use("/reviews", ReviewsRouter);
-app.use("/api/reports", reportsRouter);
+app.use('/advertisement', AdvertisementRouter);
 
-app.get("/check-cookie", (req, res) => {
-  try {
-    if (!req.cookies || Object.keys(req.cookies).length === 0) {
-      return res.status(400).json({ message: "No cookies found!" });
+
+app.use('/productcategories', productCategoriesRouter);
+app.use('/customers', CustomerRouter);
+app.use('/orders', OrderRouter);
+app.use('/advertisement', AdvertisementRouter);
+app.use('/cart', Cart);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+
+
+app.use('/vendors', vendorRoutes);
+app.use('/products', productRouter);
+app.use('/report', reportRouter);
+app.use('/reviews', ReviewsRouter);
+app.use('/api/reports', reportsRouter);
+
+
+app.get('/check-cookie', (req, res) => {
+    try {
+        if (!req.cookies || Object.keys(req.cookies).length === 0) {
+            return res.status(400).json({ message: 'No cookies found!' });
+        }
+        
+        const token = req.cookies.token;
+        const decoded = jwt.verify( token, process.env.JWT_SECRET)
+    
+        res.json({ role: decoded.role, id: decoded.id });
+    } catch (err) {
+        console.error("Error in checking cookie:", err);
+        res.status(500).json({ message: 'Internal Server Error' });
+
     }
 
     const token = req.cookies.token;
@@ -93,3 +117,4 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
