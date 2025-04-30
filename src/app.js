@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -15,11 +16,19 @@ const vendorRoutes = require('./routes/vendors/vendors.router')
 const productRouter = require('./routes/products/products.router')
 const reportRouter = require('./routes/pdf/pdf.router')
 
+
 const CustomerRouter = require("./routes/customers/customers.router");
 
 const CompanyRouter = require("./routes/company/company.router");
+
+const DiscountRouter = require("./routes/discount/discount.router");
+
 const AdvertisementRouter = require("./routes/advertisement/advertisement.router");
 const ReviewsRouter = require("./routes/reviews/reviews.router");
+
+const reportsRouter = require('./routes/reports/reports.router');
+
+const vehicleRouter = require('./routes/vehicle/vehicle.router');
 
 const app = express();
 
@@ -33,6 +42,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/inventory", inventoryRouter);
+app.use('/vehicle', vehicleRouter);
 app.use("/fertilizer-company", fertilizerCompanyRouter);
 app.use("/company", CompanyRouter);
 app.use("/productcategories", productCategoriesRouter);
@@ -41,9 +51,13 @@ app.use("/orders", OrderRouter);
 app.use("/cart", Cart);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
+
+
+app.use('/advertisement', AdvertisementRouter);
+
 
 app.use('/productcategories', productCategoriesRouter);
 app.use('/customers', CustomerRouter);
@@ -59,7 +73,7 @@ app.use('/vendors', vendorRoutes);
 app.use('/products', productRouter);
 app.use('/report', reportRouter);
 app.use('/reviews', ReviewsRouter);
-
+app.use('/api/reports', reportsRouter);
 
 
 app.get('/check-cookie', (req, res) => {
@@ -75,8 +89,8 @@ app.get('/check-cookie', (req, res) => {
     } catch (err) {
         console.error("Error in checking cookie:", err);
         res.status(500).json({ message: 'Internal Server Error' });
-    }
 
+    }
 });
 
 app.post("/logout", (req, res) => {
@@ -94,3 +108,4 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
