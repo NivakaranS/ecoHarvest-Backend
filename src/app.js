@@ -91,15 +91,6 @@ app.get('/check-cookie', (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
 
     }
-
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    res.json({ role: decoded.role, id: decoded.id });
-  } catch (err) {
-    console.error("Error in checking cookie:", err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
 });
 
 app.post("/logout", (req, res) => {
