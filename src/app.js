@@ -56,21 +56,11 @@ app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
 
 
+
 app.use('/advertisement', AdvertisementRouter);
 
 
-app.use('/productcategories', productCategoriesRouter);
-app.use('/customers', CustomerRouter);
-app.use('/orders', OrderRouter);
-app.use('/advertisement', AdvertisementRouter);
-app.use('/cart', Cart);
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
 
-
-
-app.use('/vendors', vendorRoutes);
-app.use('/products', productRouter);
 app.use('/report', reportRouter);
 app.use('/reviews', ReviewsRouter);
 app.use('/api/reports', reportsRouter);
@@ -108,4 +98,5 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
 

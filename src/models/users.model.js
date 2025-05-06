@@ -3,7 +3,11 @@ const { createIndividualCustomer, createCompanyCustomer} = require("./customers.
 const { createAdmin } = require("./admin.model");
 const { createVendor} = require("./vendors.model");
 const bcrypt = require("bcryptjs");
-
+const Customer = require('./customers.mongo')
+const Admin = require('./admin.mongo')
+const Vendor = require('./vendors.mongo')
+const Company = require('./company.mongo')
+const Individual = require('./individual.mongo');
 
 const registerIndividualCustomer = async (data) => {
   try {
@@ -163,10 +167,69 @@ const registerAdmin = async (data) => {
 };
 
 
+
+
+
+
+const getAllUsers = async () => {
+  const users = await User.find({}).sort({ createdTimestamp: -1 }).lean();
+
+  const populatedUsers = await Promise.all(
+    users.map(async (user) => {
+      const role = user.role;      
+      const userId = user.entityId
+
+      let details = null;
+
+      try {
+        if (role === 'Admin') {
+          details = await Admin.findById(userId)
+            .select('username firstName lastName email phoneNumber gender entityId role createdTimestamp')
+            .lean();
+        } else if (role === 'Vendor') {
+          details = await Vendor.findById(userId)
+            .select('firstName lastName businessName phoneNumber email profileImage')
+            .lean();
+        } else if (role === 'Customer') {
+          const customer = await Customer.findById(userId).lean();
+          if (customer) {
+            const { customerId, type } = customer;
+            if (type === 'Individual') {
+              details = await Individual.findById(customerId)
+                .select('firstName lastName phoneNumber email dateOfBirth gender address')
+                .lean();
+            } else if (type === 'Company') {
+              details = await Company.findById(customerId)
+                .select('firstName lastName companyName phoneNumber email dateOfBirth gender category address')
+                .lean();
+            }
+          }
+        }
+      } catch (err) {
+        console.error(`Error populating user ${user._id}:`, err);
+      }
+
+      return {
+        ...user,
+        userDetails: details || null,
+      };
+    })
+  );
+
+  return populatedUsers;
+};
+
+
+
+
+    
+
+
 module.exports = {
   registerUser,
   registerIndividualCustomer,
   registerCompanyCustomer,
   registerAdmin,
-  registerVendor
+  registerVendor,
+  getAllUsers
 };

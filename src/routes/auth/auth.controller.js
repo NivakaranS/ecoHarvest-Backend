@@ -2,7 +2,7 @@
 const  User = require('../../models/users.mongo');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {  registerIndividualCustomer, registerAdmin, registerCompanyCustomer, registerVendor} = require('../../models/users.model')
+const {  registerIndividualCustomer, registerAdmin, registerCompanyCustomer, registerVendor, getAllUsers} = require('../../models/users.model')
 
 
 const httpRegisterVendor = async (req, res) => {
@@ -12,6 +12,17 @@ const httpRegisterVendor = async (req, res) => {
         res.status(201).json({message: 'Vendor created successfully'})
     } catch (err) {
         console.log("Error in creating vendor", err);
+        return res.status(500).json({message: err})
+    }
+}
+
+
+const httpGetAllUsers = async (req, res) => {
+    try {
+        const users = await getAllUsers()
+        res.status(200).json(users)
+    } catch (err) {
+        console.log("Error in getting all users", err);
         return res.status(500).json({message: err})
     }
 }
@@ -110,5 +121,6 @@ module.exports = {
     httpRegisterIndividualCustomer,
     httpRegisterCompanyCustomer,
     httpRegisterAdmin,
-    httpRegisterVendor
+    httpRegisterVendor,
+    httpGetAllUsers
 }
