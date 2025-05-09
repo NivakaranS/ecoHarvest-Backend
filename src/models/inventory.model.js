@@ -41,7 +41,6 @@ const inventorySchema = new Schema(
         dispatchedTime: { type: Date },
         collectedFertilizerCompany: { type: String },
         vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
-        qrCode: { type: String }, // Store QR code data URL
     },
     { timestamps: true }
 );

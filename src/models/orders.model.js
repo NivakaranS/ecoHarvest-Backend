@@ -2,6 +2,8 @@
 
 const Orders = require('./orders.mongo');
 const Cart = require('./cart.mongo')
+const Product = require('./products.mongo')
+const mongoose = require('mongoose')
 
 
 const getAllOrders = async () => {
@@ -79,10 +81,42 @@ const checkoutOrder = async (data) => {
 
 }
 
+const getAllOrdersByVendor = async (vendorId) => {
+    return await Orders.find({
+      products: {
+        $elemMatch: {
+          productId: {
+            $in: await getProductIdsByVendor(vendorId)
+          }
+        }
+      }
+    }).populate('products.productId');
+  };
+
+  const getProductIdsByVendor = async (vendorId) => {
+    const products = await require('./products.mongo').find({ vendorId: vendorId });
+    return products.map(p => p._id);
+  };
+
+
+const getOrderHistory = (userId) => {
+  return Orders.find({ userId: userId })
+    .populate({
+      path: 'products.productId',
+      model: 'Product',
+      select: 'name subtitle imageUrl unitPrice averageRating MRP images' // Fix: 'images' instead of 'image'
+    })
+    .sort({ orderTime: -1 }) // Add sorting by order time (newest first)
+    .exec();
+};
+    
+
 module.exports = {
     getAllOrders,
     deleteOrder,
     updateOrder,
     createOrder,
-    checkoutOrder
+    checkoutOrder,
+    getAllOrdersByVendor, 
+    getOrderHistory
 };

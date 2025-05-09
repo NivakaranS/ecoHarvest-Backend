@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -18,6 +19,10 @@ const CompanyRouter = require('./routes/company/company.router');
 const AdvertisementRouter = require('./routes/advertisement/advertisement.router');
 const ReviewsRouter = require('./routes/reviews/reviews.router');
 const vehicleRouter = require('./routes/vehicle/vehicle.router');
+const AdminRouter = require('./routes/admin/admin.router')
+const NotificationRouter = require('./routes/notification/notification.router')
+const DiscountRouter = require("./routes/discount/discount.router");
+
 
 const app = express();
 
@@ -30,7 +35,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Register routes (once)
+
 app.use('/inventory', inventoryRouter);
 app.use('/vehicle', vehicleRouter);
 app.use('/fertilizer-company', fertilizerCompanyRouter);
@@ -43,11 +48,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/vendors', vendorRoutes);
 app.use('/products', productRouter);
+app.use("/api/discount", DiscountRouter);;
+app.use("/admin", AdminRouter);
+app.use("/notification", NotificationRouter);
+app.use('/advertisement', AdvertisementRouter);
 app.use('/report', reportRouter);
 app.use('/advertisement', AdvertisementRouter);
 app.use('/reviews', ReviewsRouter);
 
-// Check cookie endpoint
+
 app.get('/check-cookie', (req, res) => {
   try {
     if (!req.cookies || Object.keys(req.cookies).length === 0) {
@@ -62,6 +71,25 @@ app.get('/check-cookie', (req, res) => {
     console.error('Error in checking cookie:', err.message);
     res.status(500).json({ message: 'Internal Server Error' });
   }
+
+app.use('/api/reports', reportsRouter);
+
+
+app.get('/check-cookie', (req, res) => {
+    try {
+        if (!req.cookies || Object.keys(req.cookies).length === 0) {
+            return res.status(400).json({ message: 'No cookies found!' });
+        }
+        
+        const token = req.cookies.token;
+        const decoded = jwt.verify( token, process.env.JWT_SECRET)
+    
+        res.json({ role: decoded.role, id: decoded.id });
+    } catch (err) {
+        console.error("Error in checking cookie:", err);
+        res.status(500).json({ message: 'Internal Server Error' });
+
+    }
 });
 
 // Logout endpoint
@@ -81,3 +109,4 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
