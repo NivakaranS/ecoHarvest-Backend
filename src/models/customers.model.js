@@ -10,14 +10,13 @@ const getCustomerDetailsById = async (id) => {
   try {
     const cleanId = id.replace(/^:/, '').trim(); // remove leading colon and trim whitespace
     const user = await User.findById(cleanId);
-    console.log(cleanId)
+
     
     if (!user) {
       console.error("User not found");
       return null;
     }
 
-    console.log('entity Id: ', user.entityId)
 
     const customer = await Customer.findById(user.entityId);
 
