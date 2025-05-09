@@ -1,6 +1,6 @@
 
 
-const { getAllOrders, deleteOrder, updateOrder, createOrder, checkoutOrder } = require('../../models/orders.model')
+const { getAllOrders, deleteOrder, updateOrder, createOrder, checkoutOrder, getAllOrdersByVendor } = require('../../models/orders.model')
 
 async function httpGetAllOrders(req, res) {
     try {
@@ -43,11 +43,24 @@ async function httpUpdateOrder(req, res) {
 }
 
 
+async function httpGetOrdersByVendor(req, res) {
+  try {
+    const vendorId = req.params.vendorId;
+    const orders = await getAllOrdersByVendor(vendorId);
+    return res.status(200).json(orders);
+  } catch (err) {
+    console.error("Error getting vendor orders", err);
+    return res.status(500).json({ error: "Failed to fetch vendor orders" });
+  }
+}
+
+
 
 module.exports = {
     httpCreateOrder,
     httpUpdateOrder,
     httpDeleteOrder,
     httpGetAllOrders,
-    httpCheckoutOrder
+    httpCheckoutOrder,
+    httpGetOrdersByVendor
 };
