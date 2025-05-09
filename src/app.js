@@ -15,7 +15,9 @@ const fertilizerCompanyRouter = require('./routes/fertilizerCompany/fertilizerCo
 const vendorRoutes = require('./routes/vendors/vendors.router')
 const productRouter = require('./routes/products/products.router')
 const reportRouter = require('./routes/pdf/pdf.router')
+const AdminRouter = require('./routes/admin/admin.router')
 
+const NotificationRouter = require('./routes/notification/notification.router')
 
 const CustomerRouter = require("./routes/customers/customers.router");
 
@@ -54,6 +56,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/discount", DiscountRouter);
 app.use("/vendors", vendorRoutes);
 app.use("/products", productRouter);
+app.use("/admin", AdminRouter);
+app.use("/notification", NotificationRouter);
 
 
 

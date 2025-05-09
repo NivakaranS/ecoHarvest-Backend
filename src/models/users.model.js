@@ -1,13 +1,17 @@
-const User = require("./users.mongo");
+
 const { createIndividualCustomer, createCompanyCustomer} = require("./customers.model");
 const { createAdmin } = require("./admin.model");
 const { createVendor} = require("./vendors.model");
 const bcrypt = require("bcryptjs");
 const Customer = require('./customers.mongo')
+const User = require("./users.mongo");
 const Admin = require('./admin.mongo')
 const Vendor = require('./vendors.mongo')
 const Company = require('./company.mongo')
 const Individual = require('./individual.mongo');
+
+const {createNotification} = require('./notification.model')
+
 
 const registerIndividualCustomer = async (data) => {
   try {
@@ -171,6 +175,8 @@ const registerAdmin = async (data) => {
 
 
 
+
+
 const getAllUsers = async () => {
   const users = await User.find({}).sort({ createdTimestamp: -1 }).lean();
 
@@ -220,8 +226,112 @@ const getAllUsers = async () => {
 };
 
 
+const updateVendor = async (vendorId, updatedData) => {
+  try {
+    const vendorUser = await User.findById(vendorId);
+    console.log(vendorUser)
+    console.log('vendorId', vendorId)
+    if (!vendorUser) {
+      return "User not found";
+    }
+  
+    const id = vendorId
+    vendorId = vendorUser.entityId;
 
+    const vendor = await Vendor.findById(vendorId);
 
+    if (!vendor) {
+      return "Vendor not found";
+    }
+    
+
+    
+    if (updatedData.firstName) vendor.firstName = updatedData.firstName;
+    if (updatedData.lastName) vendor.lastName = updatedData.lastName;
+    if (updatedData.email) vendor.email = updatedData.email;
+    if (updatedData.phoneNumber) vendor.phoneNumber = updatedData.phoneNumber;
+    if (updatedData.businessName) vendor.businessName = updatedData.businessName;
+
+    await vendor.save();
+
+    
+    const user = await User.findOne({ entityId: vendorId, role: "Vendor" });
+    if (!user) {
+      return "User record for vendor not found";
+    }
+
+    if (updatedData.username) user.username = updatedData.username;
+    if (updatedData.password) {
+      const hashedPassword = await bcrypt.hash(updatedData.password, 10);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    await createNotification(
+      {title: "Account information Updated Successfully",
+        message: "Account information updated",
+        userId: id
+      }
+    )
+    return "Vendor updated successfully";
+  } catch (err) {
+    console.error("Error updating admin:", err);
+    return "Error updating admin";
+  }
+};
+
+const updateAdmin = async (adminId, updatedData) => {
+  try {
+    const adminUser = await User.findById(adminId);
+    if (!adminUser) {
+      return "User not found";
+    }
+  
+    const id = adminId
+    adminId = adminUser.entityId;
+
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return "Admin not found";
+    }
+
+    
+    if (updatedData.firstName) admin.firstName = updatedData.firstName;
+    if (updatedData.lastName) admin.lastName = updatedData.lastName;
+    if (updatedData.email) admin.email = updatedData.email;
+    if (updatedData.phoneNumber) admin.phoneNumber = updatedData.phoneNumber;
+    if (updatedData.gender) admin.gender = updatedData.gender;
+
+    await admin.save();
+
+    
+    const user = await User.findOne({ entityId: adminId, role: "Admin" });
+    if (!user) {
+      return "User record for admin not found";
+    }
+
+    if (updatedData.username) user.username = updatedData.username;
+    if (updatedData.password) {
+      const hashedPassword = await bcrypt.hash(updatedData.password, 10);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    await createNotification(
+      {title: "Account information Updated Successfully",
+        message: "Account information updated",
+        userId: id
+      }
+    )
+    return "Admin updated successfully";
+  } catch (err) {
+    console.error("Error updating admin:", err);
+    return "Error updating admin";
+  }
+};
     
 
 
@@ -231,5 +341,7 @@ module.exports = {
   registerCompanyCustomer,
   registerAdmin,
   registerVendor,
-  getAllUsers
+  getAllUsers,
+  updateAdmin,
+  updateVendor
 };
