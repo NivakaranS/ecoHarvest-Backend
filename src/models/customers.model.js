@@ -3,6 +3,44 @@
 const Customer = require('./customers.mongo');
 const Individual = require('./individual.mongo');
 const Company = require('./company.mongo');
+const User = require('./users.mongo')
+
+
+const getCustomerDetailsById = async (id) => {
+  try {
+    const cleanId = id.replace(/^:/, '').trim(); // remove leading colon and trim whitespace
+    const user = await User.findById(cleanId);
+
+    
+    if (!user) {
+      console.error("User not found");
+      return null;
+    }
+
+
+    const customer = await Customer.findById(user.entityId);
+
+    if(!customer) {
+        console.error("Customer not found");
+        return null;
+    }
+
+    if(customer.type === 'Individual') {
+        const individual = await Individual.findById(customer.customerId);
+        return [user, customer,  individual];
+    } else if(customer.type === 'Company') {
+        const company = await Company.findById(customer.customerId);
+        return [user, customer, company];
+    } else {
+        console.error("Customer type not found");
+        return 'Customer not found';
+    }
+
+  } catch (err) {
+    console.error("Error fetching customer by ID:", err);
+    return null;
+  }
+};
 
 
 async function createIndividualCustomer(data) {
@@ -98,5 +136,6 @@ module.exports = {
     findCustomer,
     updateCustomer,
     deleteCustomer,
-    getAllCustomers
+    getAllCustomers,
+    getCustomerDetailsById
 }

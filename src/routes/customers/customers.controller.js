@@ -1,6 +1,19 @@
 
-const { createCustomer, updateCustomer, deleteCustomer, findCustomer, getAllCustomers } = require('../../models/customers.model');
+const { createCustomer, getCustomerDetailsById, updateCustomer, deleteCustomer, findCustomer, getAllCustomers } = require('../../models/customers.model');
 
+const httpGetCustomerDetailsById = async (req, res) => {
+    try {
+        const customerId = req.params.userId; // Assuming the ID is passed as a URL parameter
+        const customer = await getCustomerDetailsById(customerId);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+        res.status(200).json(customer);
+    } catch (error) {
+        console.error('Error fetching customer:', error);
+        res.status(500).json({ message: 'Error fetching customer', error });
+    }
+}
 
 const httpGetAllCustomers = async (req, res) => {
     try {
@@ -48,5 +61,6 @@ module.exports = {
     httpUpdateCustomer,
     httpDeleteCustomer,
     httpFindCustomer,
-    httpGetAllCustomers
+    httpGetAllCustomers,
+    httpGetCustomerDetailsById
 }

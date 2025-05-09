@@ -1,7 +1,22 @@
 const Vendor = require('../../models/vendors.mongo');
 const User = require('../../models/users.mongo');
 const bcrypt = require('bcryptjs');
+const {getVendorDetailsById} = require('../../models/vendors.model')
 
+
+const httpGetVendorById = async (req, res) => {
+    try {
+        const vendorId = req.params.id; // Assuming the ID is passed as a URL parameter
+        const vendor = await getVendorDetailsById(vendorId);
+        if (!vendor) {
+            return res.status(404).json({ message: 'Vendor not found' });
+        }
+        res.status(200).json(vendor);
+    } catch (error) {
+        console.error('Error fetching vendor:', error);
+        res.status(500).json({ message: 'Error fetching vendor', error });
+    }
+};
 
 const getVendorById = async (req, res) => {
     try {
@@ -90,4 +105,4 @@ const loginVendor = async (req, res) => {
 };
 
 
-module.exports = {  getVendorById, updateVendor, deleteVendor };
+module.exports = {  getVendorById, updateVendor, httpGetVendorById, deleteVendor };
