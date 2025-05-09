@@ -2,8 +2,33 @@
 const  User = require('../../models/users.mongo');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {  registerIndividualCustomer, registerAdmin, registerCompanyCustomer, registerVendor} = require('../../models/users.model')
+const {  registerIndividualCustomer, updateAdmin, updateVendor, registerAdmin, registerCompanyCustomer, registerVendor, getAllUsers} = require('../../models/users.model')
 
+
+const httpUpdateVendor = async (req, res) => {
+    try {
+        const vendorId = req.body.vendorId
+        console.log('vendor Id', vendorId)
+        const data = req.body;
+        const updatedVendor = await updateVendor(vendorId, data);
+        res.status(200).json(updatedVendor);
+    } catch (err) {
+        console.log("Error in updating vendor", err);
+        return res.status(500).json({message: err})
+    }
+}
+
+const httpUpdateAdmin = async (req, res) => {
+    try {
+        const adminId = req.body.adminId
+        const data = req.body;
+        const updatedAdmin = await updateAdmin(adminId, data);
+        res.status(200).json(updatedAdmin);
+    } catch (err) {
+        console.log("Error in updating admin", err);
+        return res.status(500).json({message: err})
+    }
+}
 
 const httpRegisterVendor = async (req, res) => {
     try {
@@ -12,6 +37,17 @@ const httpRegisterVendor = async (req, res) => {
         res.status(201).json({message: 'Vendor created successfully'})
     } catch (err) {
         console.log("Error in creating vendor", err);
+        return res.status(500).json({message: err})
+    }
+}
+
+
+const httpGetAllUsers = async (req, res) => {
+    try {
+        const users = await getAllUsers()
+        res.status(200).json(users)
+    } catch (err) {
+        console.log("Error in getting all users", err);
         return res.status(500).json({message: err})
     }
 }
@@ -110,5 +146,8 @@ module.exports = {
     httpRegisterIndividualCustomer,
     httpRegisterCompanyCustomer,
     httpRegisterAdmin,
-    httpRegisterVendor
+    httpRegisterVendor,
+    httpGetAllUsers,
+    httpUpdateAdmin,
+    httpUpdateVendor
 }

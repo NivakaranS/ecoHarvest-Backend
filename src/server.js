@@ -13,6 +13,20 @@ const MONGO_URL = 'mongodb+srv://ecoharvest-api:UCevSDXY6cdutUYP@ecoharvest.e3o1
 const server = http.createServer(app);
 
 
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST']
+    }
+  });
+
+io.on('connection', (socket) => {
+    const {id, role} = socket.handshake.query;
+    console.log('A user connected', id, role)
+})
+
+
+
 // Emits events when the connection is ready
 mongoose.connection.once('open', () => {
     console.log('MongoDB connection is ready!!')

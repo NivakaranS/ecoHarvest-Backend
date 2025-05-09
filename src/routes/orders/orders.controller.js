@@ -1,6 +1,16 @@
 
+const { getAllOrders, getOrderHistory, deleteOrder, updateOrder, createOrder, checkoutOrder, getAllOrdersByVendor } = require('../../models/orders.model')
 
-const { getAllOrders, deleteOrder, updateOrder, createOrder, checkoutOrder, getAllOrdersByVendor } = require('../../models/orders.model')
+
+async function httpGetOrderHistory(req, res) {
+    try {
+        const rawUserId = req.params.userId;
+        const userId = rawUserId.replace(/^:/, '');
+        return res.status(200).json(await getOrderHistory(userId));
+    } catch(err) {
+        console.error("Error in getting order history", err);
+    }
+}
 
 async function httpGetAllOrders(req, res) {
     try {
@@ -62,5 +72,6 @@ module.exports = {
     httpDeleteOrder,
     httpGetAllOrders,
     httpCheckoutOrder,
-    httpGetOrdersByVendor
+    httpGetOrdersByVendor,
+    httpGetOrderHistory
 };
