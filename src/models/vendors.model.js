@@ -11,10 +11,9 @@ const createVendor = async (data) => {
         businessName: data.businessName,
         phoneNumber: data.phoneNumber,
         email: data.email,
-        password: data.password,
     });
 
-    return vendor._id;
+    return vendor._id.toString();
   } catch (error) {
     console.error("Error creating Vendor:", error);
     
