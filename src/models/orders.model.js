@@ -4,6 +4,8 @@ const Orders = require('./orders.mongo');
 const Cart = require('./cart.mongo')
 const Product = require('./products.mongo')
 const mongoose = require('mongoose')
+const Vendor = require('./vendors.mongo')
+const User = require('./users.mongo')
 
 
 const getAllOrders = async () => {
@@ -99,19 +101,22 @@ const checkoutOrder = async (data) => {
 }
 
 const getAllOrdersByVendor = async (vendorId) => {
-    return await Orders.find({
-      products: {
-        $elemMatch: {
-          productId: {
-            $in: await getProductIdsByVendor(vendorId)
-          }
-        }
-      }
-    }).populate('products.productId');
-  };
+  const vendorObjectId = new mongoose.Types.ObjectId(vendorId);
 
+  const productDocs = await Product.find({ vendorId: vendorObjectId });
+  const productIds = productDocs.map((p) => p._id);
+
+  const orders = await Orders.find({
+    "products.productId": { $in: productIds }
+  })
+    .populate("products.productId")
+    .populate("userId", "name email");
+
+  return orders;
+};
+  
   const getProductIdsByVendor = async (vendorId) => {
-    const products = await require('./products.mongo').find({ vendorId: vendorId });
+    const products = await require('./products.mongo').find({ vendorId });
     return products.map(p => p._id);
   };
 

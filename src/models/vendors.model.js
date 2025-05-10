@@ -25,7 +25,7 @@ const getVendorDetailsById = async (id) => {
     const cleanId = id.replace(/^:/, '').trim(); // remove leading colon and trim whitespace
     const user = await User.findById(cleanId);
     console.log(id)
-    
+      
     if (!user) {
       console.error("User not found");
       return null;
