@@ -98,6 +98,22 @@ const checkoutOrder = async (data) => {
 
 }
 
+const getAllOrdersByVendor = async (vendorId) => {
+    return await Orders.find({
+      products: {
+        $elemMatch: {
+          productId: {
+            $in: await getProductIdsByVendor(vendorId)
+          }
+        }
+      }
+    }).populate('products.productId');
+  };
+
+  const getProductIdsByVendor = async (vendorId) => {
+    const products = await require('./products.mongo').find({ vendorId: vendorId });
+    return products.map(p => p._id);
+  };
 
 
 const getOrderHistory = (userId) => {
@@ -118,5 +134,6 @@ module.exports = {
     updateOrder,
     createOrder,
     checkoutOrder,
+    getAllOrdersByVendor, 
     getOrderHistory
 };

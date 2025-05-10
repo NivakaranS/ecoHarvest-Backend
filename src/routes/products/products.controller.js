@@ -83,7 +83,7 @@ const httpCreateProduct = async (req, res) => {
       productCategory_id,
       imageUrl,
       status,
-      MRP,
+      MRP,  
       vendorId,
     } = req.body;
     if (

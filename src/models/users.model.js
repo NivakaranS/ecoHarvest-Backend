@@ -125,7 +125,7 @@ const registerVendor = async (data) => {
       businessName: data.businessName,
       phoneNumber: data.phoneNumber,
       email: data.email,
-      password: data.password,
+      password: hashedPassword,
 
     })
 
