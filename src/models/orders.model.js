@@ -7,7 +7,21 @@ const mongoose = require('mongoose')
 
 
 const getAllOrders = async () => {
-    return await Orders.find({})
+    try {
+        const orders = await Orders.find({})
+        .populate({
+            path: 'products.productId',
+            model: 'Product',
+            select: 'name'
+        })
+        .lean()
+
+        return orders
+    }
+    catch (err) {
+        console.log("Error in getting all orders", err)
+        throw new Error("Failed to fetch orders");
+    }
 }
 
 const createOrder = async (data) => {
@@ -55,10 +69,13 @@ const checkoutOrder = async (data) => {
         console.log("Checkout Cart", checkoutCart)
 
         console.log("Total Amount", data.cart.totalAmount)
+        orderNumber = "ORD100" + (await Orders.countDocuments() + 1);
+        console.log("Order Number", orderNumber);
+
         
         const order = Orders.create({
             userId: data.cart.userId,
-            orderNumber: data.cart._id,
+            orderNumber: orderNumber,
             products: checkoutCart[0].products.map(item => ({
                 productId: item.productId,
                 quantity: item.quantity,

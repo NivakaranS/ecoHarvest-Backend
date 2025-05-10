@@ -62,6 +62,8 @@ const registerCompanyCustomer = async (data) => {
             category: data.category,
             address: data.address
         });
+
+        console.log('companyId', companyId)
     
         const newUser = new User({
           username: data.username,
@@ -177,6 +179,7 @@ const registerAdmin = async (data) => {
 
 
 
+
 const getAllUsers = async () => {
   const users = await User.find({}).sort({ createdTimestamp: -1 }).lean();
 
@@ -186,7 +189,7 @@ const getAllUsers = async () => {
       const userId = user.entityId
 
       let details = null;
-
+  
       try {
         if (role === 'Admin') {
           details = await Admin.findById(userId)
