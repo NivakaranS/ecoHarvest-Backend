@@ -5,6 +5,7 @@ const { registerVendor, getVendorById, httpGetVendorById, updateVendor, deleteVe
 
 const router = express.Router();
 
+router.get('/vendor/:id',getVendorById);
 router.get('/:id', httpGetVendorById);
 router.put('/:id', updateVendor);  
 router.delete('/:id', deleteVendor);

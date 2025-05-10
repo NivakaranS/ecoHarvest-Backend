@@ -19,31 +19,24 @@ const httpGetVendorById = async (req, res) => {
 };
 
 const getVendorById = async (req, res) => {
-    try {
-        
-        const user = await User.findById(req.params.id);
-        const vendor = await Vendor.findById(user.entityId);
-        if (!vendor) return res.status(404).json({ message: 'Vendor not found' });
+  try {
+    const vendor = await Vendor.findById(req.params.id);
 
-        res.status(200).json(vendor);
-    } catch (error) {
-        console.error('Error fetching vendor:', error);
-        res.status(500).json({ message: 'Error fetching vendor', error });
+    if (!vendor) {
+      return res.status(404).json({ message: 'Vendor not found' });
     }
+
+    res.status(200).json(vendor);
+  } catch (error) {
+    console.error('Error fetching vendor:', error);
+    res.status(500).json({ message: 'Error fetching vendor', error });
+  }
 };
 
 const updateVendor = async (req, res) => {
     try {
         
-        const user = await User.findById(req.params.id);
-        const userId = user.entityId;
-        const vendorId =await Vendor.findById(user.entityId);
-        console.log(userId,vendorId);
-        // if (vendorId !== user.entityId) {
-        //     return res.status(403).json({ message: 'You are not authorized to update this profile' });
-        // }
-
-        const updatedVendor = await Vendor.findByIdAndUpdate(vendorId, {...req.body, updatedAt: Date.now()}, { new: true });
+        const updatedVendor = await Vendor.findByIdAndUpdate(req.params.id,{...req.body, updatedAt: Date.now()}, { new: true });
         if (!updatedVendor) return res.status(404).json({ message: 'Vendor not found' });
 
         res.status(200).json({ message: 'Vendor updated successfully!', vendor: updatedVendor });

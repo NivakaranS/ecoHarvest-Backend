@@ -57,23 +57,6 @@ app.use('/advertisement', AdvertisementRouter);
 app.use('/reviews', ReviewsRouter);
 
 
-app.get('/check-cookie', (req, res) => {
-  try {
-    if (!req.cookies || Object.keys(req.cookies).length === 0) {
-      return res.status(400).json({ message: 'No cookies found!' });
-    }
-
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    res.json({ role: decoded.role, id: decoded.id });
-  } catch (err) {
-    console.error('Error in checking cookie:', err.message);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-
-app.use('/api/reports', reportsRouter);
-
 
 app.get('/check-cookie', (req, res) => {
     try {
