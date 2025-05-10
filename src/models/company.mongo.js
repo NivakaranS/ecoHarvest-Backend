@@ -33,7 +33,7 @@ const CompanySchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Dairy', 'Meat', 'Vegetable', 'Bakery', 'Other']
+
     },
     address: {
         type: String,

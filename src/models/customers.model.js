@@ -4,7 +4,8 @@ const Customer = require('./customers.mongo');
 const Individual = require('./individual.mongo');
 const Company = require('./company.mongo');
 const User = require('./users.mongo')
-
+const {createNotification} = require('./notification.model')
+const bcrypt = require('bcrypt');
 
 const getCustomerDetailsById = async (id) => {
   try {
@@ -111,13 +112,81 @@ async function findCustomer(query) {
     })
 }
 
-async function updateCustomer(data) {
-    return await Customer.find({
-        _id: data.id
-    }, data, {
-        upsert: true
-    } )
-}
+const updateCustomer = async ( updatedData) => {
+    try {
+      const customerUser = await User.findById(updatedData.id);
+      if (!customerUser) {
+        return "User not found";
+      }
+  
+      const id = updatedData.id;
+      const customerEntityId = customerUser.entityId;
+  
+      const customer = await Customer.findById(customerEntityId);
+      if (!customer) {
+        return "Customer not found";
+      }
+  
+      // Update customer fields if provided
+      if (customer.type === 'Individual') {
+        const individual = await Individual.findById(customer.customerId);
+        if (!individual) {
+          return "Individual customer not found";
+        }
+  
+        if (updatedData.firstName) individual.firstName = updatedData.firstName;
+        if (updatedData.lastName) individual.lastName = updatedData.lastName;
+        if (updatedData.email) individual.email = updatedData.email;
+        if (updatedData.phoneNumber) individual.phoneNumber = updatedData.phoneNumber;
+        if (updatedData.address) individual.address = updatedData.address;
+        if (updatedData.dateOfBirth) individual.dateOfBirth = updatedData.dateOfBirth;
+  
+        
+        await individual.save();
+      } else if (customer.type === 'Company') {
+        const company = await Company.findById(customer.customerId);
+        if (!company) {
+          return "Company customer not found";
+        }
+  
+        if (updatedData.firstName) company.firstName = updatedData.firstName;
+        if (updatedData.lastName) company.lastName = updatedData.lastName;
+        if (updatedData.email) company.email = updatedData.email;
+        if (updatedData.phoneNumber) company.phoneNumber = updatedData.phoneNumber;
+        if (updatedData.address) company.address = updatedData.address;
+        if (updatedData.dateOfBirth) company.dateOfBirth = updatedData.dateOfBirth;
+  
+
+        await company.save();
+      }
+  
+      // Update user fields if provided
+      const user = await User.findOne({ entityId: customerEntityId, role: "Customer" });
+      if (!user) {
+        return "User record for customer not found";
+      }
+  
+      if (updatedData.username) user.username = updatedData.username;
+      if (updatedData.password) {
+        const hashedPassword = await bcrypt.hash(updatedData.password, 10);
+        user.password = hashedPassword;
+      }
+  
+      await user.save();
+  
+      
+      await createNotification({
+        title: "Account Information Updated Successfully",
+        message: "Account information updated",
+        userId: id
+      });
+  
+      return "Customer updated successfully";
+    } catch (err) {
+      console.error("Error updating customer:", err);
+      return "Error updating customer";
+    }
+  };
 
 async function deleteCustomer(id) {
     return await Customer.deleteOne({

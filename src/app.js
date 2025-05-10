@@ -57,7 +57,6 @@ app.use('/advertisement', AdvertisementRouter);
 app.use('/reviews', ReviewsRouter);
 
 
-
 app.get('/check-cookie', (req, res) => {
     try {
         if (!req.cookies || Object.keys(req.cookies).length === 0) {
